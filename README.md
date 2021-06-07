@@ -1,65 +1,105 @@
-# bb-minio
-Building block for MinIO
+# General
+
+## Deployment type
+
+docker
+
+## Image
+
+Based on official image on Docker Hub: https://hub.docker.com/r/minio/minio
+
+## Licence
+
+Affero General Public License Version 3 (AGPLv3)
+
+## Version
+
+RELEASE.2021-05-27T22-06-31Z
+
+## Description
+
+MinIO is a high performance, distributed object storage system. It is software-defined, runs on industry standard hardware and is 100% open source with the dominant license being GNU AGPL v3.
+MinIO is different in that it was designed from its inception to be the standard in private/hybrid cloud object storage. Because MinIO is purpose-built to serve only objects, a single-layer architecture achieves all of the necessary functionality without compromise. The result is a cloud-native object server that is simultaneously performant, scalable and lightweight. While MinIO excels at traditional object storage use cases like secondary storage, disaster recovery and archiving, it is unique at overcoming the challenges associated with machine learning, analytics and cloud-native application workloads.
+
+# Deployment
+
+A. Native installation:
+
+```sh
+curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip
+unzip rclone-current-linux-amd64.zip
+cd rclone-*-linux-amd64
+sudo cp rclone /usr/bin/
+sudo chown root:root /usr/bin/rclone
+sudo chmod 755 /usr/bin/rclone
+```
+
+B. General example with Docker:
+
+```sh
+docker run -d --rm
+        --name minio \
+        -p 80:9000/tcp \
+        -e "MINIO_ACCESS_KEY=username" \
+        -e "MINIO_SECRET_KEY=password" \
+        -v /host/data:/data \
+        minio/minio:RELEASE.2021-05-27T22-06-31Z \
+        server /data
+```
+
+## Parameters
+
+|Name|Value|Description|
+|-|-|-|
+|Ports|`-p 80:9000/tcp` | MinIO port (HTTP) |
+|Volumes|`-v $PWD/minio/data:/data`| Persist MinIO data |
+<br/>
 
 
-# IMAGE SOURCE
-Official image on __Git Hub__: https://github.com/minio/minio
+# Authentication
 
-# AUTHENTICATION
+Use:
+```sh
+-e MINIO_ACCESS_KEY=username
+-e MINIO_SECRET_KEY=password
+```
 
-> docker run -d -v /host/data:/data -p 80:9000/tcp --name minio __-e "MINIO_ACCESS_KEY=username" -e "MINIO_SECRET_KEY=password"__  minio/minio server /data
+## Testing
 
-# HTTPS
+Direct your browser at: ```http://<HOST>```, set: user/password.
 
-Generate: private.key, public.crt -> $HOME/.minio/certs (see: https://docs.minio.io/docs/how-to-secure-access-to-minio-server-with-tls).
+# TLS
 
-> mkdir -p $HOME/.minio/
->
-> openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $HOME/.minio/private.key -out $HOME/.minio/public.crt
->
-> docker run -d -v /host/data:/data __-v $HOME/.minio/:/root/.minio__ -p 443:443/tcp --name minio1 -e "MINIO_ACCESS_KEY=username" -e "MINIO_SECRET_KEY=password"  minio/minio server __--certs-dir /root/.minio__ --address ":443" /data
+Generate: ```private.key```, ```public.crt```. (fore more details, see: [2]).
+
+```sh
+mkdir -p $HOME/.minio/
+openssl req -x509 -nodes \
+        -days 365 \
+        -newkey rsa:2048 \
+        -keyout $HOME/.minio/private.key \
+        -out $HOME/.minio/public.crt
+```
+
+```sh
+docker run -d --rm \
+        --name minio
+        -p 443:443/tcp \
+        -e "MINIO_ACCESS_KEY=username" \
+        -e "MINIO_SECRET_KEY=password" \
+        -v /host/data:/data \
+        -v $HOME/.minio/:/root/.minio \
+        minio/minio:RELEASE.2021-05-27T22-06-31Z \
+        server --certs-dir /root/.minio --address ":443" /data
+```
+
+## Testing
+
+Direct your browser at: ```https://<HOST>```, set: user/password.
 
 
-## Rclone integration
+# References
 
-### RCLONE INSTALL
->  curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip
->
->  unzip rclone-current-linux-amd64.zip
->
->  cd rclone-*-linux-amd64
->
->  sudo cp rclone /usr/bin/
->
->  sudo chown root:root /usr/bin/rclone
->
->  sudo chmod 755 /usr/bin/rclone
+[1] https://docs.min.io/docs/minio-server-configuration-guide.html
 
-
-### RCLONE CONFIG
->  ~/.config/rclone$ cat /home/ubuntu/.config/rclone/rclone.conf
->
-> [s3-test]
->
-> type = s3
->
-> provider = http://193.224.59.150:80
->
-> access_key_id = username
->
-> secret_access_key = password
->
-> region = us-east-1
->
-> endpoint = http://xxx.xxx.xxx.xxx:80
-
-### RCLONE TEST
-> rclone lsd s3-test:/
->
-> rclone ls s3-test:bucket
-
-### RCONE MOUNT/UNMOUNT
->  rclone mount -vv --daemon --dir-cache-time 5s s3-test:akos ./mount
->
->  fusermount -uz /./rclone-s3-mount/
-
+[2] https://docs.minio.io/docs/how-to-secure-access-to-minio-server-with-tls
