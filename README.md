@@ -14,7 +14,7 @@ Affero General Public License Version 3 (AGPLv3)
 
 ## Version
 
-RELEASE.2021-05-27T22-06-31Z
+RELEASE.2021-10-02T16-31-05Z.fips
 
 ## Description
 
@@ -43,8 +43,14 @@ docker run -d --rm
         -e "MINIO_ACCESS_KEY=username" \
         -e "MINIO_SECRET_KEY=password" \
         -v /host/data:/data \
-        minio/minio:RELEASE.2021-05-27T22-06-31Z \
+        minio/minio:RELEASE.RELEASE.2021-10-02T16-31-05Z \
         server /data
+```
+
+C. Docker-compose: change the `MINIO_ACCESS_KEY` and `MINIO_SECRET_KEY` environment variables and run:
+
+```
+docker-compose up -d
 ```
 
 ## Parameters
@@ -89,7 +95,7 @@ docker run -d --rm \
         -e "MINIO_SECRET_KEY=password" \
         -v /host/data:/data \
         -v $HOME/.minio/:/root/.minio \
-        minio/minio:RELEASE.2021-05-27T22-06-31Z \
+        minio/minio:RELEASE.2021-10-02T16-31-05Z \
         server --certs-dir /root/.minio --address ":443" /data
 ```
 
