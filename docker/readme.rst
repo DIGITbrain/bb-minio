@@ -9,9 +9,9 @@ About
 
 Version
 -------
-MinIO **Community** version **RELEASE.2022-03-17T06-34-49Z** 
-available in Docker Hub [2]_ is deployed, 
-which is created, maintained and supported by the MinIO team. 
+MinIO **Community** version
+available in Docker Hub [2]_ is deployed,
+which is created, maintained and supported by the MinIO team.
 
 License
 -------
@@ -22,7 +22,7 @@ Pre-requisites
 
 * *docker* installed
 * access to DIGITbrain private docker repo (username, password) to pull the image:
-  
+
   - ``docker login dbs-container-repo.emgora.eu``
   - ``docker pull dbs-container-repo.emgora.eu/minio:8.3.3``
 
@@ -58,7 +58,7 @@ The image uses access-key/secret-key and a server cerificate signed by DIGITbrai
 Note that as you cannot turn off hostname verification in the Console, so
 you must use a server certificate issued for the particular <public_ip> and specify MINIO_SERVER_URL.
 Certificates in the container can be found in directory: /root/.minio/certs/ and /root/.minio/certs/CAs/.
-In order to use self-signed certificates, concatenate server certificate and the 
+In order to use self-signed certificates, concatenate server certificate and the
 CA certificate (``cat {server.crt,ca.crt} > public.crt``) and place into /root/.minio/certs/CAs directory.
 
 Using MinIO client, you can disable hostname verification.
@@ -75,7 +75,7 @@ Configuration
 
 Environment variables
 ---------------------
-.. list-table:: 
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -90,10 +90,10 @@ Environment variables
    * - *MINIO_SERVER_URL*
      - ``-e MINIO_SERVER_URL=https://<public_ip>:10000``
      - URL for the API endpoint. You must use it to avoid invalid host IP, when using Console.
-  
+
 Ports
 -----
-.. list-table:: 
+.. list-table::
   :header-rows: 1
 
   * - Container port
@@ -112,22 +112,22 @@ Volumes
 
 The container might use the following volume mounts.
 
-.. list-table:: 
+.. list-table::
    :header-rows: 1
 
    * - Name
      - Volume mount
      - Comment
-   * - *data*    
-     - -v $PWD/data_directory_on_host:/data  
+   * - *data*
+     - -v $PWD/data_directory_on_host:/data
      - MinIO data. Use this directory to persist data (will survive container restarts).
-   * - *Server certificates*    
-     - -v $PWD/certs:/root/.minio/certs  
+   * - *Server certificates*
+     - -v $PWD/certs:/root/.minio/certs
      - Server key and certificate for API and Console with names: private.key and server.crt.
-   * - *CA certificate*    
-     - -v $PWD/certs/ca.pem:/root/.minio/certs/CAs/public.crt  
+   * - *CA certificate*
+     - -v $PWD/certs/ca.pem:/root/.minio/certs/CAs/public.crt
      - Certificate Authority certificate (containing server certificate and CA certificate too).
-   
+
 References
 ==========
 

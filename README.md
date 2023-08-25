@@ -14,7 +14,7 @@ Affero General Public License Version 3 (AGPLv3)
 
 ## Version
 
-RELEASE.2021-10-02T16-31-05Z.fips
+RELEASE.2023-08-23T10-07-06Z
 
 ## Description
 
@@ -43,7 +43,7 @@ docker run -d --rm
         -e "MINIO_ACCESS_KEY=username" \
         -e "MINIO_SECRET_KEY=password" \
         -v /host/data:/data \
-        minio/minio:RELEASE.RELEASE.2021-10-02T16-31-05Z \
+        minio/minio:RELEASE.2023-08-23T10-07-06Z \
         server /data
 ```
 
